@@ -115,9 +115,9 @@ myScheduledMeetingsPlot<-function(pd){
   campus<-pd$campus[1]
   ggplot(data = pd,aes(x = weekday,y = reorder(Block,desc(Block))))+
     geom_tile(aes(fill = count))+
-    scale_fill_gradient(guide = guide_legend(title = paste0("Students on campus: ",campus,"\n Throughout the day")),low = "#00FBFB",high = "#006363")+
+    scale_fill_gradient(guide = guide_legend(title = paste0("Students on campus ",campus,"\nthroughout the day")),low = "#00FBFB",high = "#006363")+
     xlab(NULL)+
-    ggtitle("Enrollments by Time Block",subtitle = paste0("Course Schedules\nFor Students taking courses at the",campus,"\nduring the ",
+    ggtitle("Enrollments by Time Block",subtitle = paste0("Course Schedules\nFor Students taking courses at the",campus," campus \nduring the ",
                                                           term," semester"))+
     scale_y_discrete(name = "Time of Day", breaks = factor(as.character(substr(gsub(":","",substr(seq(
       from=as.POSIXct("2012-1-1 6:00", tz="UTC"),
@@ -144,9 +144,8 @@ myScheduledMeetingsPlot<-function(pd){
 ####### UI ##############################################################################################################################################
 
 ui <- fluidPage(
-  titlePanel(title = div(img(src="Times-Life-Science-Consulting,-LLC---Logo-Only---high-resolution---black copy"), "Student Schedule Loads"),
+  titlePanel(title = "Student Schedule Loads",
              windowTitle = "Generated Data"), 
-  #for the favicon to be active when deployed to rstudio connect
   tags$head(
     tags$style(HTML("
                     .shiny-output-error-validation {
@@ -204,9 +203,7 @@ server <- function(input, output,session) {
   })
   output$SCHEDULE<-renderPlot({
     validate(
-      need(sum(schedule_prep()$count)>0,paste0("\nNo Math ",
-                                               schedule_prep()$REASON_COURSE[1],
-                                               "\nstudents taking classes at\n",
+      need(sum(schedule_prep()$count)>0,paste0("\nNo students taking classes at\n",
                                                schedule_prep()$CAMPUS[1],
                                                "\nin ",
                                                schedule_prep()$term[1]))
