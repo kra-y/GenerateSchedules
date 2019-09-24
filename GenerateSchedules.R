@@ -2,33 +2,6 @@ library(tidyverse)
 library(lubridate)
 library(gtools)
 rm(list = ls())
-# dbGetQuery(db_con, statement = "select fsch.pidm
-#               , fsch.term_code
-#            , fsch.course_subject, fsch.course_number
-#            , online_ind
-#            , begin_time_1, end_time_1,meeting_days_1
-#            , begin_time_2, end_time_2,meeting_days_2
-#            , begin_time_3, end_time_3,meeting_days_3
-#            , campus_code, campus,
-#            courses.course_number as reason_course
-#            from wsrpmgr.fact_slcc_course_history fsch
-#            ----join for course time information
-#            JOIN wsrpmgr.dim_section
-#            USING(dim_section_key)
-#            ----join for the banner id
-#            JOIN wsrpmgr.dim_student
-#            ON fsch.pidm = dim_student.pidm
-#            ----include only students that have a math course
-#            JOIN (select *
-#            from wsrpmgr.fact_slcc_course_history fsch
-#            where fsch.course_subject = 'MATH'
-#            and fsch.course_number in ('0950','0980','1010','1030','1040','1050','1210')
-#            ) courses
-#            ON fsch.pidm = courses.pidm
-#            and fsch.term_code = courses.term_code
-#            where fsch.term_code > '201700'
-#            order by fsch.pidm, fsch.course_subject, fsch.course_number")
-
 #generate unique IDs for students PIDM
 pidm<-as.character(sprintf("%06d",0:999999))
 #generate the list of semester codes TERM CODE
