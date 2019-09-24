@@ -112,9 +112,3 @@ d2<-d1[rep(row.names(d1), d1$n.student.term.courses),c(1,4)]%>%
          campus = sample(campus,n(),replace = T))
 d2
 }
-
-write.table(GenerateSchedules(20000),"/Users/karaneo/Documents/R/shinyapps/Scheduler/d.csv",sep = ',')
-
-
-
-
