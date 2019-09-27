@@ -1,12 +1,14 @@
 ####### PACKAGES ######################################################################################################################################
+list.of.packages<-c("tidyverse","shiny","plotly","tables","lubridate")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
 library(shiny)
 library(tidyverse)
 library(plotly)
 library(tables)
 set.seed(922)
-rm(list = ls())
 setwd("~/Documents/R/shinyapps/Scheduler")
-d<-read.csv("d.csv")%>%
+d<-GenerateSchedules()%>%
   mutate(term.code.string = as.factor(paste0(ifelse(substr(term.code,5,6)=="20","Spring ",
                                                     ifelse(substr(term.code,5,6)=="30","Summer ","Fall ")),
                                              substr(term.code,1,4))))
@@ -115,9 +117,9 @@ myScheduledMeetingsPlot<-function(pd){
   campus<-pd$campus[1]
   ggplot(data = pd,aes(x = weekday,y = reorder(Block,desc(Block))))+
     geom_tile(aes(fill = count))+
-    scale_fill_gradient(guide = guide_legend(title = paste0("Students on campus ",campus,"\nthroughout the day")),low = "#00FBFB",high = "#006363")+
+    scale_fill_gradient(guide = guide_legend(title = paste0("Students on campus ",campus,"\nthroughout the day")),low = "#5A0392",high = "#F0008D")+
     xlab(NULL)+
-    ggtitle("Enrollments by Time Block",subtitle = paste0("Course Schedules\nFor Students taking courses at the",campus," campus \nduring the ",
+    ggtitle("Enrollments by Time Block",subtitle = paste0("Course Schedules\nFor Students taking courses at the",campus,"\nduring the ",
                                                           term," semester"))+
     scale_y_discrete(name = "Time of Day", breaks = factor(as.character(substr(gsub(":","",substr(seq(
       from=as.POSIXct("2012-1-1 6:00", tz="UTC"),
@@ -223,5 +225,3 @@ server <- function(input, output,session) {
 # Run the application 
 shinyApp(ui = ui, server = server)
 
-
-# Math heat App ID
