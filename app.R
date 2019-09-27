@@ -185,7 +185,7 @@ ui <- fluidPage(
                           width = "100%")) #plotOutput
              ),#tabPanel
              tabPanel("Info",
-                      h4("This app displays the scheduled time commitments for all students enrolled in courses at the selected campus in the selected semester. For example, if the user selects Spring 2018 and campus B, the app overlays a transparency of every student's blocked-off weekly schedule at that camous. So, if there is a student in Spring 2018 who is enrolled in a section of Math 0980 which meets Monday and Wednesday between 08:30 a.m. and 09:20 a.m. that meets at campus D, the plot will appear slightly darker at that time period in the full weekly schedule of that campus. In other words, the darker a block of time is on the plot, the busier that campus will be.")
+                      h4("This app displays the concentration of students enrolled in courses at the selected campus in the selected semester. For example, if the user selects Spring 2018 and campus B, the app overlays a transparency of every student's blocked-off weekly schedule at that camous. In other words, the lighter a block of time is on the plot, the busier the campus is.")
              )#tabPanel
            )#tabsetPanel
            #        )#mainPanel
