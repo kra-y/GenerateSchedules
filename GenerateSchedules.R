@@ -1,3 +1,6 @@
+list.of.packages<-c("tidyverse","gtools","lubridate")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
 library(tidyverse)
 library(lubridate)
 library(gtools)
@@ -32,6 +35,7 @@ course.attributes<-expand.grid("course.subject" = course.subjects,
                                       "60 minutes",
                                       ifelse(credits==4 & days.per.week==2,
                                              "2 hours","80 minutes"))))
+
 
 course.catalog<-course.attributes[rep(row.names(course.attributes),course.attributes$n.sections),c(1,5)]%>%
   group_by(course)%>%
@@ -104,7 +108,7 @@ d2<-d1[rep(row.names(d1), d1$n.student.term.courses),c(1,4)]%>%
   dplyr::select(-c(n.sections,
                    days.per.week))%>%
   mutate(begin.time.1 = begin.times.1[sample(1:57,n(),replace = T)],
-         end.time.1 = begin.time.1+minutes(class.length),
+         end.time.1 = begin.time.1+lubridate::minutes(class.length),
          begin.time.2 = begin.time.1,
          end.time.2 = end.time.1,
          begin.time.3 = begin.time.1,
@@ -112,3 +116,4 @@ d2<-d1[rep(row.names(d1), d1$n.student.term.courses),c(1,4)]%>%
          campus = sample(campus,n(),replace = T))
 d2
 }
+
