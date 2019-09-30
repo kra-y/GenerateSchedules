@@ -117,3 +117,4 @@ d2<-d1[rep(row.names(d1), d1$n.student.term.courses),c(1,4)]%>%
 d2
 }
 
+
