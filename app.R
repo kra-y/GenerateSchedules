@@ -1,9 +1,10 @@
 ####### PACKAGES ######################################################################################################################################
-list.of.packages<-c("tidyverse","shiny","plotly","tables","lubridate")
+list.of.packages<-c("dplyr","shiny","plotly","tables","lubridate")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 library(shiny)
 library(tidyverse)
+
 library(plotly)
 library(tables)
 set.seed(922)
@@ -12,6 +13,8 @@ d<-GenerateSchedules()%>%
   mutate(term.code.string = as.factor(paste0(ifelse(substr(term.code,5,6)=="20","Spring ",
                                                     ifelse(substr(term.code,5,6)=="30","Summer ","Fall ")),
                                              substr(term.code,1,4))))
+
+
 ####### Random Functions for Plots #######################################################################################################################
 colfunc<-colorRampPalette(c("#00FBFB","#006363"))
 min_year<-min(as.numeric(substr(d$term.code,1,4)))
@@ -167,6 +170,10 @@ ui <- fluidPage(
                        label = "Term Code: ",
                        choices = term.code.strings,
                        selected = "Spring 2019"),
+        selectizeInput("COURSE_STRING",
+                       label = "Course: ",
+                       choices = reason.courses,
+                       selected = "Math-1230"),
         selectizeInput("CAMPUS",
                        label = "Campus: ",
                        choices = campuses,
@@ -200,8 +207,9 @@ server <- function(input, output,session) {
   
   schedule_prep<-reactive({
     req(input$TERM_CODE_STRING)
+    req(input$COURSE_STRING)
     req(input$CAMPUS)
-    myScheduledMeetingsData(input$TERM_CODE_STRING,input$CAMPUS)
+    myScheduledMeetingsData(input$TERM_CODE_STRING,input$COURSE_STRING,input$CAMPUS)
   })
   output$SCHEDULE<-renderPlot({
     validate(
