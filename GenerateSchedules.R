@@ -1,7 +1,7 @@
 list.of.packages<-c("tidyverse","gtools","lubridate")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
-library(tidyverse)
+library(dplyr)
 library(lubridate)
 library(gtools)
 rm(list = ls())
@@ -69,7 +69,7 @@ campus<-LETTERS[1:10]
 
 #DATA SET OF STUDENTS AND THEIR START AND END SEMESTER ENROLLMENTS
 
-GenerateSchedules<-function(n.students = 10000){
+GenerateSchedules<-function(n.students = 1000){
 d0<-data.frame("pidm" = sample(pidm,n.students,replace = F))
 for (i in 1:nrow(d0)){
   start.term.index<-sample(1:length(term.codes),1)
