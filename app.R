@@ -33,10 +33,11 @@ posix.to.numtime<-function(x){
 }
 
 
-myScheduledMeetingsData<-function(termcodestring,campusstring){
+myScheduledMeetingsData<-function(termcodestring,campusstring,reason.course){
   pre<-d%>%
     filter(term.code.string==termcodestring)%>%
     filter(campus==campusstring)%>%
+    filter(course.enrolled==reason.course)%>%
     filter((is.na(begin.time.2) &
               is.na(end.time.2) &
               is.na(meeting.day.2)&
@@ -113,16 +114,18 @@ myScheduledMeetingsData<-function(termcodestring,campusstring){
   
   d1$term<-termcodestring
   d1$campus<-campusstring
+  d1$course<-reason.course
   d1
 } 
 myScheduledMeetingsPlot<-function(pd){
   term<-pd$term[1]
   campus<-pd$campus[1]
+  course<-pd$course[1]
   ggplot(data = pd,aes(x = weekday,y = reorder(Block,desc(Block))))+
     geom_tile(aes(fill = count))+
-    scale_fill_gradient(guide = guide_legend(title = paste0("Students on campus ",campus,"\nthroughout the day")),low = "#5A0392",high = "#F0008D")+
+    scale_fill_gradient(guide = guide_legend(title = paste0(course, " students\non Campus ",campus,"\nthroughout the day")),colfunc)+
     xlab(NULL)+
-    ggtitle("Enrollments by Time Block",subtitle = paste0("Course Schedules\nFor Students taking courses at the",campus,"\nduring the ",
+    ggtitle("Enrollments by Time Block",subtitle = paste0("Course Schedules for students taking\n",course," on the ",campus," campus\nDuring the ",
                                                           term," semester"))+
     scale_y_discrete(name = "Time of Day", breaks = factor(as.character(substr(gsub(":","",substr(seq(
       from=as.POSIXct("2012-1-1 6:00", tz="UTC"),
@@ -192,7 +195,7 @@ ui <- fluidPage(
                           width = "100%")) #plotOutput
              ),#tabPanel
              tabPanel("Info",
-                      h4("This app displays the concentration of students enrolled in courses at the selected campus in the selected semester. For example, if the user selects Spring 2018 and campus B, the app overlays a transparency of every student's blocked-off weekly schedule at that camous. In other words, the lighter a block of time is on the plot, the busier the campus is.")
+                      h4("This app displays the concentration of students enrolled in courses at the selected campus in the selected semester. For example, if the user selects Spring 2018 and campus B, the app overlays a transparency of every student's blocked-off weekly schedule at that campus. In other words, the lighter a block of time is on the plot, the busier the campus is.")
              )#tabPanel
            )#tabsetPanel
            #        )#mainPanel
@@ -209,12 +212,12 @@ server <- function(input, output,session) {
     req(input$TERM_CODE_STRING)
     req(input$COURSE_STRING)
     req(input$CAMPUS)
-    myScheduledMeetingsData(input$TERM_CODE_STRING,input$COURSE_STRING,input$CAMPUS)
+    myScheduledMeetingsData(input$TERM_CODE_STRING,input$CAMPUS,input$COURSE_STRING)
   })
   output$SCHEDULE<-renderPlot({
     validate(
-      need(sum(schedule_prep()$count)>0,paste0("\nNo students taking classes at\n",
-                                               schedule_prep()$CAMPUS[1],
+      need(sum(schedule_prep()$count)>0,paste0("\nNo ",schedule_prep()$course[1], " students taking classes\non Campus ",
+                                               schedule_prep()$campus[1],
                                                "\nin ",
                                                schedule_prep()$term[1]))
     )
