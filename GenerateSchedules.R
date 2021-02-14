@@ -69,7 +69,7 @@ campus<-LETTERS[1:10]
 
 #DATA SET OF STUDENTS AND THEIR START AND END SEMESTER ENROLLMENTS
 
-GenerateSchedules<-function(n.students = 1000){
+GenerateSchedules<-function(n.students = 10000){
 d0<-data.frame("pidm" = sample(pidm,n.students,replace = F))
 for (i in 1:nrow(d0)){
   start.term.index<-sample(1:length(term.codes),1)
@@ -116,5 +116,4 @@ d2<-d1[rep(row.names(d1), d1$n.student.term.courses),c(1,4)]%>%
          campus = sample(campus,n(),replace = T))
 d2
 }
-
 
