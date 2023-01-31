@@ -1,4 +1,5 @@
 ####### PACKAGES ######################################################################################################################################
+rm(list = ls())
 list.of.packages<-c("dplyr","shiny","plotly","tables","lubridate")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
@@ -8,8 +9,8 @@ library(tidyverse)
 library(plotly)
 library(tables)
 set.seed(922)
-setwd("~/Documents/R/shinyapps/Scheduler")
-d<-GenerateSchedules()%>%
+setwd("~/Documents/R Projects/Schedules/")
+d<-GenerateSchedules(10000)%>%
   mutate(term.code.string = as.factor(paste0(ifelse(substr(term.code,5,6)=="20","Spring ",
                                                     ifelse(substr(term.code,5,6)=="30","Summer ","Fall ")),
                                              substr(term.code,1,4))))

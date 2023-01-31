@@ -14,10 +14,10 @@ levels(term.code.strings) <-
   paste0(ifelse(substr(levels(term.codes), 5, 6) == "20", "Spring ", 
                 ifelse(substr(levels(term.codes), 5, 6) == "30", "Summer ", "Fall ")),
          substr(levels(term.codes), 1, 4)) # recode term codes into pretty string string values
-#generate all the subjects at the college: 
-course.subjects<-c("Math", "English", "History","Writing","Engineering","Chemistry","Biology","Business","Physics","Economics","Music","Art")
+#generate  subjects at the college: 
+course.subjects<-c("Math")
 #COURSE NUMBER
-course.numbers<-sprintf("%04d",seq(900,2050,by = 15))
+course.numbers<-sprintf("%04d",seq(900,2050,by = 50))
 #CREATE LIST OF ALL THE COURSES AND RANDOMLY ASSIGN THE NUMBER OF CREDITS THEY'RE WORTH
 course.attributes<-expand.grid("course.subject" = course.subjects,
                               "course.number" = course.numbers)%>%
@@ -65,7 +65,7 @@ end.times.3<-seq(from = as.POSIXct("2019-09-22 07:50:00 MDT"),
                 by = "15 min")
 meeting.days.3<-c("M","T","W","H","F")
 #CAMPUS
-campus<-LETTERS[1:10]
+campus<-LETTERS[1:4]
 
 #DATA SET OF STUDENTS AND THEIR START AND END SEMESTER ENROLLMENTS
 
