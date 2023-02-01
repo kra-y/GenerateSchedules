@@ -1,4 +1,5 @@
 library(dplyr)
+library(gtools)
 # scrap
 #A room can be either occupied or unoccupied
 # 730 - 8 - 830 - 9 - 930 -10 -1030 -11 - 1130 - 12 - 1230 - 1 - 130 - 2 - 230 - 3 - 330 - 4 - 430 - 5 - 530
@@ -29,17 +30,35 @@ B_Classes<- function(aclasses) {
   return(as.integer(y))
 }
 
-DurationCode<-function(A,B){
+DurationCode<-function(Ablocks,Bblocks){
   DURATION_CODE<- paste0(c(rep("A",Ablocks),rep("B",Bblocks)),collapse = "")
   return(DURATION_CODE)
 }
 
-flavorlist<-data.frame(x = seq(1,13.5))
-flavorlist$y<-B_Classes(flavorlist$x)
-DurationCode(3,4)
-flavorlist$DURATION_CODE<-DurationCode(flavorlist$x,flavorlist$y)
+master<-data.frame(x = seq(1,13.5))
+master$y<-B_Classes(master$x)
+
+master$DURATION_CODE<-rep(1,13)
+
+for(i in 1:13){
+  master$DURATION_CODE[i]<-DurationCode(master$x[i],master$y[i])
+}
 
 
+RoomBlockPermutations<-function(Block){
+  
+  
+  characters<- strsplit(Block,split = "")
+  numberofclasses<-length(characters[[1]])
+  other<-length(characters[[1]])
+  # return(is.numeric(numberofclasses))
+  perms<-permutations(n=numberofclasses,r=other,characters[[1]],set = F)
+  return(perms)
+  
+}
 
 
+# So we have the function that gives us all the possible flavors of course
+#a room can have, but what we need is to just randomly sample from this matrix,
+# but I only want to run the permutations script just once
 
