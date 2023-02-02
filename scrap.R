@@ -35,6 +35,29 @@ DurationCode<-function(Ablocks,Bblocks){
   return(DURATION_CODE)
 }
 
+
+apply(d,1,paste,collapse=" ")
+
+
+
+samplefromschedule<-function(string){
+  choices<-RoomBlockPermutations(string)
+  choice<-choices[sample(nrow(choices),size = 1),]
+  return(choice)
+}
+
+# So we have the function that gives us all the possible flavors of course
+#a room can have, but what we need is to just randomly sample from this matrix,
+# but I only want to run the permutations script just once per classroom
+
+samplefromschedule<-function(string){
+  choices<-RoomBlockPermutations(string)
+  index<-sample(nrow(choices),size = 1)
+  choice<-as.matrix(choices[1,],nrow = 1,ncol = length(string))
+  choice1<-apply(choices[index,],1,list)
+  return(choice1)
+}
+
 master<-data.frame(x = seq(1,13.5))
 master$y<-B_Classes(master$x)
 
@@ -43,22 +66,4 @@ master$DURATION_CODE<-rep(1,13)
 for(i in 1:13){
   master$DURATION_CODE[i]<-DurationCode(master$x[i],master$y[i])
 }
-
-
-RoomBlockPermutations<-function(Block){
-  
-  
-  characters<- strsplit(Block,split = "")
-  numberofclasses<-length(characters[[1]])
-  other<-length(characters[[1]])
-  # return(is.numeric(numberofclasses))
-  perms<-permutations(n=numberofclasses,r=other,characters[[1]],set = F)
-  return(perms)
-  
-}
-
-
-# So we have the function that gives us all the possible flavors of course
-#a room can have, but what we need is to just randomly sample from this matrix,
-# but I only want to run the permutations script just once
 
