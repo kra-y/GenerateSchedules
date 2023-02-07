@@ -26,7 +26,7 @@ RoomBlockPermutations<-function(Block){
   other<-length(characters[[1]])
   # return(is.numeric(numberofclasses))
   perms<-permutations(n=numberofclasses,r=other,characters[[1]],set = F)
-  return(perms) .
+  return(perms) 
   
 }
 

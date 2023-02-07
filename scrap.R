@@ -66,4 +66,4 @@ master$DURATION_CODE<-rep(1,13)
 for(i in 1:13){
   master$DURATION_CODE[i]<-DurationCode(master$x[i],master$y[i])
 }
-
+gsub(LETTERS,'MATH900','')
