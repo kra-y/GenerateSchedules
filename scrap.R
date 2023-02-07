@@ -36,7 +36,7 @@ DurationCode<-function(Ablocks,Bblocks){
 }
 
 
-apply(d,1,paste,collapse=" ")
+# apply(d,1,paste,collapse=" ")
 
 
 
@@ -50,13 +50,6 @@ samplefromschedule<-function(string){
 #a room can have, but what we need is to just randomly sample from this matrix,
 # but I only want to run the permutations script just once per classroom
 
-samplefromschedule<-function(string){
-  choices<-RoomBlockPermutations(string)
-  index<-sample(nrow(choices),size = 1)
-  choice<-as.matrix(choices[1,],nrow = 1,ncol = length(string))
-  choice1<-apply(choices[index,],1,list)
-  return(choice1)
-}
 
 master<-data.frame(x = seq(1,13.5))
 master$y<-B_Classes(master$x)
@@ -66,4 +59,7 @@ master$DURATION_CODE<-rep(1,13)
 for(i in 1:13){
   master$DURATION_CODE[i]<-DurationCode(master$x[i],master$y[i])
 }
-gsub(LETTERS,'MATH900','')
+
+
+# create distributions for all the different subject when we draw sample
+# we have five different course subjects we need to create samples for
