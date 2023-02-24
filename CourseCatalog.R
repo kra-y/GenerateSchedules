@@ -29,3 +29,8 @@ coursecatalog<-coursecatalog%>%
 
 
 #we need to bring all this code over to a main script so it can all run in one organized place.
+
+ # we need to write a script to generate the schedules of all the students
+
+
+# We should start
