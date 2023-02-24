@@ -23,7 +23,6 @@ library(gtools)
  # a <= 13.5
 # b <= 9
 # a = 1 , b = 6
-# a = 2 , 
 
 B_Classes<- function(aclasses) {
   y<-floor((13.5-aclasses)/1.5)
