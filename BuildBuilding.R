@@ -1,6 +1,8 @@
 #Let's create a building with a small number of rooms and a schedule of the time blocks for each of those rooms
 library(stats)
 library(tidyverse)
+library(dplyr)
+library(gtools)
 
 
 
@@ -83,15 +85,15 @@ df<-coursecatalog%>%
 df1<-BuildingA%>%
   # group_by(classroom)%>%
   mutate(B1 = as.list(strsplit(BLOCKORDER,''))[[1]][1],
-         B2 = as.list(strsplit(BLOCKORDER,''))[[1]][2],
-         B3 = as.list(strsplit(BLOCKORDER,''))[[1]][3],
-         B4 = as.list(strsplit(BLOCKORDER,''))[[1]][4],
-         B5 = as.list(strsplit(BLOCKORDER,''))[[1]][5],
-         B6 = as.list(strsplit(BLOCKORDER,''))[[1]][6],
-         B7 = as.list(strsplit(BLOCKORDER,''))[[1]][7],
-         B8 = as.list(strsplit(BLOCKORDER,''))[[1]][8],
-         B9 = as.list(strsplit(BLOCKORDER,''))[[1]][9],
-         B10 = as.list(strsplit(BLOCKORDER,''))[[1]][10])
+         B2 = as.list(strsplit(BLOCKORDER,''))[[2]][1],
+         B3 = as.list(strsplit(BLOCKORDER,''))[[3]][1],
+         B4 = as.list(strsplit(BLOCKORDER,''))[[4]][1],
+         B5 = as.list(strsplit(BLOCKORDER,''))[[5]][1],
+         B6 = as.list(strsplit(BLOCKORDER,''))[[6]][1],
+         B7 = as.list(strsplit(BLOCKORDER,''))[[7]][1],
+         B8 = as.list(strsplit(BLOCKORDER,''))[[8]][1],
+         B9 = as.list(strsplit(BLOCKORDER,''))[[9]][1],
+         B10 = as.list(strsplit(BLOCKORDER,''))[[10]][1])
 sum(df1[,6:15]=="A",na.rm = T)
 sum(df1[,6:15]=="B",na.rm = T)
 # ok so we have sum(df1[,6:15]=="A",na.rm = T) A Blocks
@@ -102,6 +104,78 @@ sum(df1[,6:15]=="B",na.rm = T)
 studentcourses$COURSECODE1<-studentcourses$COURSE
 studentcourses$COURSECODE2<-ifelse(studentcourses$NUMBER_OF_COURSES==1,)
 
+# 
+# 
+# CHATGPT help
+
+# Define the building's opening and closing times
+start_time <- as.POSIXct("2023-03-01 08:00:00")
+end_time <- as.POSIXct("2023-03-01 18:00:00")
+
+# Define the time slots for each course
+course_slots <- seq(from = start_time, to = end_time, by = 30*60) # every 30 minutes
+
+# Define the course names and durations
+course_names <- c("Intro to Programming", "Data Structures", "Algorithms")
+course_durations <- c(2, 3, 2) # in hours
 
 
+######
 
+# Create a matrix to represent the schedule
+num_slots <- length(course_slots)
+num_courses <- length(course_names)
+schedule <- matrix(NA, nrow = num_slots, ncol = num_courses)
+
+# Fill the schedule with course names
+for (i in 1:num_courses) {
+  course_duration_slots <- course_durations[i] * 60 / 30
+  available_slots <- which(is.na(schedule[, i]))
+  num_available_slots <- length(available_slots)
+  if (num_available_slots < course_duration_slots) {
+    stop("Not enough available slots for course ", course_names[i])
+  }
+  start_slot <- sample(available_slots, 1)
+  end_slot <- start_slot + course_duration_slots - 1
+  schedule[start_slot:end_slot, i] <- course_names[i]
+}
+
+# Print the schedule
+colnames(schedule) <- course_names
+rownames(schedule) <- format(course_slots, "%H:%M")
+print(schedule)
+
+# Define the start and end times for each course block
+start_times <- c("08:00", "09:30", "11:00", "12:30", "14:00", "15:30", "17:00", "18:30", "20:00")
+end_times <- c("09:20", "10:50", "12:20", "13:50", "15:20", "16:50", "18:20", "19:50", "21:20")
+
+# Create a data frame to store the course schedule for BuildingA
+BuildingA_schedule <- data.frame(
+  classroom = BuildingA$classroom,
+  block_order = BuildingA$BLOCKORDER,
+  start_time = character(length(nrow(BuildingA))),
+  end_time = character(length(nrow(BuildingA))),
+  course_name = character(length(nrow(BuildingA)))
+)
+
+# Loop through each row of BuildingA_schedule and fill in the start time, end time, and course name
+for (i in seq_len(nrow(BuildingA_schedule))) {
+  # Get the block order for the current row
+  block_order <- BuildingA_schedule$block_order[i]
+  
+  # Get the start and end times for the current block
+  start_time <- start_times[block_order]
+  end_time <- end_times[block_order]
+  
+  # Get the course name for the current classroom and block
+  classroom <- BuildingA_schedule$classroom[i]
+  course_name <- paste0("Course", block_order, "-", classroom)
+  
+  # Update the course schedule data frame with the start time, end time, and course name
+  BuildingA_schedule$start_time[i] <- start_time
+  BuildingA_schedule$end_time[i] <- end_time
+  BuildingA_schedule$course_name[i] <- course_name
+}
+
+# Print the course schedule for BuildingA
+BuildingA_schedule
