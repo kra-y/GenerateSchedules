@@ -30,8 +30,8 @@ head(course_catalogue)
 
 course_catalogue <- course_catalogue %>%
   mutate(credit_hours = ifelse(level %in% c("0980","1000", "1010"), 2,
-                               ifelse(level %in% c("1200", "1220", "1260", "2000", "2550"), 3,
-                                      ifelse(level == "1230", 4, NA))),
+                               ifelse(level %in% c("1200", "1220", "2000"), 3,
+                                      ifelse(level %in% c("1230","1260","2550"), 4, NA))),
          hours_per_session = ifelse(credit_hours==2,.83333,
                                     ifelse(credit_hours==3,1.5,
                                            ifelse(credit_hours==4,2,NA))))
