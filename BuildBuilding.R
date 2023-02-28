@@ -20,7 +20,7 @@ B_Classes<- function(aclasses) {
   return(as.integer(y))
 }
 
-DurationCode<-function(Ablocks,Bblocks){
+DurationCode<-function(Ablocks,Bblocks,){
   DURATION_CODE<- paste0(c(rep("A",Ablocks),rep("B",Bblocks)),collapse = "")
   return(DURATION_CODE)
 }
