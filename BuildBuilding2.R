@@ -32,6 +32,14 @@ RoomBlockPermutations<-function(Block){
   
 }
 
+samplefromschedule<-function(string){
+  choices<-RoomBlockPermutations(string)
+  index<-sample(nrow(choices),size = 1)
+  choice<-apply(choices, 1, paste, collapse = "")[index]
+  return(choice)
+}
+
+
 
 naiveschedule <- data.frame("A" = rep(seq(0,16),70),
                             "B" = rep(seq(0,9),119),
@@ -41,6 +49,11 @@ naiveschedule0 <- naiveschedule %>%
   mutate(FULLHOURS = A*.833333+B*1.5+C*2) %>% 
   filter(FULLHOURS <= 13.5 & FULLHOURS >= 7) %>%
   rowwise() %>% # Modified this line to use rowwise function
-  mutate(DURATION_CODE = DurationCode(Ablocks = A, Bblocks = B, Cblocks = C))
+  mutate(DURATION_CODE = DurationCode(Ablocks = A, Bblocks = B, Cblocks = C),
+         RANDOM_ORDER = samplefromschedule(DURATION_CODE))
 
+naiveschedule0$RANDOM_ORDER<-NA
 
+for(i in nrow(naiveschedule0)){
+  naiveschedule0$RANDOM_ORDER[i]<-samplefromschedule(naiveschedule0$DURATION_CODE[i])
+}
