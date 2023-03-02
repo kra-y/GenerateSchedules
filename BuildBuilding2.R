@@ -12,6 +12,17 @@ IfZeroNada <- function(char, arg) {
   return(out)
 }
 
+random_scramble <- function(word) {
+  # split the word into individual letters
+  letters <- strsplit(word, "")[[1]]
+  
+  # use sample to shuffle the letters
+  shuffled <- sample(letters)
+  
+  # join the shuffled letters back into a string
+  return(paste(shuffled, collapse = ""))
+}
+
 DurationCode <- function(Ablocks, Bblocks, Cblocks) {
   DURATION_CODE <- paste0(
     c(IfZeroNada("A",Ablocks),IfZeroNada("B",Bblocks),IfZeroNada("C",Cblocks)),
@@ -23,21 +34,11 @@ DurationCode <- function(Ablocks, Bblocks, Cblocks) {
 RoomBlockPermutations<-function(Block){
   
   
-  characters<- strsplit(as.character(Block),split = "")
-  numberofclasses<-length(characters[[1]])
-  other<-length(characters[[1]])
-  # return(is.numeric(numberofclasses))
-  perms<-permutations(n=numberofclasses,r=other,characters[[1]],set = F)
-  return(perms) 
+  perm<-random_scramble(Block)
+  return(perm) 
   
 }
 
-samplefromschedule<-function(string){
-  choices<-RoomBlockPermutations(string)
-  index<-sample(nrow(choices),size = 1)
-  choice<-apply(choices, 1, paste, collapse = "")[index]
-  return(choice)
-}
 
 
 
@@ -50,10 +51,8 @@ naiveschedule0 <- naiveschedule %>%
   filter(FULLHOURS <= 13.5 & FULLHOURS >= 7) %>%
   rowwise() %>% # Modified this line to use rowwise function
   mutate(DURATION_CODE = DurationCode(Ablocks = A, Bblocks = B, Cblocks = C),
-         RANDOM_ORDER = samplefromschedule(DURATION_CODE))
+         RANDOM_ORDER = RoomBlockPermutations(DURATION_CODE))
 
 naiveschedule0$RANDOM_ORDER<-NA
 
-for(i in nrow(naiveschedule0)){
-  naiveschedule0$RANDOM_ORDER[i]<-samplefromschedule(naiveschedule0$DURATION_CODE[i])
-}
+
