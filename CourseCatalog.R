@@ -1,5 +1,6 @@
 
 
+
 #Make Course Catalog
 library(stats)
 library(dplyr)
@@ -32,6 +33,9 @@ course_catalogue <- course_catalogue %>%
   mutate(credit_hours = ifelse(level %in% c("0980","1000", "1010"), 2,
                                ifelse(level %in% c("1200", "1220", "2000"), 3,
                                       ifelse(level %in% c("1230","1260","2550"), 4, NA))),
+         block_code = ifelse(level %in% c("0980","1000", "1010"), "A",
+                               ifelse(level %in% c("1200", "1220", "2000"), "B",
+                                      ifelse(level %in% c("1230","1260","2550"), "C", NA))),
          hours_per_session = ifelse(credit_hours==2,.83333,
                                     ifelse(credit_hours==3,1.5,
                                            ifelse(credit_hours==4,2,NA))))

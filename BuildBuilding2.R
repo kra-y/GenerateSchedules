@@ -51,8 +51,8 @@ naiveschedule0 <- naiveschedule %>%
   filter(FULLHOURS <= 13.5 & FULLHOURS >= 7) %>%
   rowwise() %>% # Modified this line to use rowwise function
   mutate(DURATION_CODE = DurationCode(Ablocks = A, Bblocks = B, Cblocks = C),
-         RANDOM_ORDER = RoomBlockPermutations(DURATION_CODE))
+         RANDOM_ORDER = RoomBlockPermutations(DURATION_CODE),
+         )
 
-naiveschedule0$RANDOM_ORDER<-NA
 
 
