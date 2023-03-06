@@ -112,7 +112,24 @@ naiveschedule0 <- naiveschedule %>%
 
 
 
+selectfromcodes<-function(block){
+  set<-course_catalogue%>%
+    filter(block_code==block)
+  index<-sample(nrow(set),1)
+  course<-set[index,"course_name"]
+  return(course)
+}
 
+classorder<-function(block_order){
+  class_order<-{}
+  for(i in 1:length(block_order)){
+    # randomly assign a course whose block fits the block parameter
+    class_order[i]<-selectfromcodes(block_order[i])
+  }
+  return(class_order)
+    
+  
+}
 
 
 
@@ -126,16 +143,16 @@ time_blocks <- seq(from = as.POSIXct("2023-03-01 07:00:00"), to = as.POSIXct("20
 
 # Loop over each room
 for (room in 1:10) {
-  #create a clock broken up into 10 minute intervals.
-  #assign a block order to the room
-  block_order<-sample(naiveschedule0$RANDOM_ORDER)
-  # convert the string "ABBCBS" to the right format
+  block_order<-sample(naiveschedule0$RANDOM_ORDER,10,replace = T)
+  # convert the string "ABBCBA" to the right format
   block_order = strsplit(block_order,"")[[1]]
   #then create the class order
   class_order<-{}
   for(i in 1:length(block_order)){
-    # randomly assign a course whose block fits
-    class_order[i]<-sample(course_catalogue[which(course_catalogue$block_code==block_order[i]),],1)  }
+    # randomly assign a course whose block fits the block parameter
+    class_order[i]<-selectfromcodes(block_order[i])
+    
+  }
   # Loop over each time block
   for (i in 1:(length(block_order)) {
     # Filter course catalogue for courses that fit within this time block
@@ -165,3 +182,10 @@ for (room in 1:10) {
 room_schedules <- room_schedules %>%
   select(course_name, level, room, start_time, end_time) %>%
   arrange(room, start_time)
+
+
+
+
+
+
+
